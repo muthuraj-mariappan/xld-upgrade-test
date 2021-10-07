@@ -39,6 +39,11 @@ integrationServer {
             previousInstallation = true
             version = "10.1.0"
             httpPort = 4519
+            overlays = [
+                    conf: [
+                            files("src/test/resources/deployit-license.lic")
+                    ]
+            ]
         }
         controlPlane {
             version = "10.3.0-917.113"

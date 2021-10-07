@@ -1,0 +1,25 @@
+--- License ---
+License version: 3
+Product: XL Deploy
+Licensed to: XebiaLabs
+Contact: XebiaLabs Internal Use Only <info@xebialabs.com>
+Expires after: 2037-01-01
+Licensed number of CIs: xl.Satellite=1000
+Licensed plugin: jbossas-plugin
+Licensed plugin: wmq-plugin
+Licensed plugin: osb-plugin
+Licensed plugin: tomcat-plugin
+Licensed plugin: wps-plugin
+Licensed plugin: windows-plugin
+Licensed plugin: iis-plugin
+Licensed plugin: biztalk-plugin
+Licensed plugin: wls-plugin
+Licensed plugin: was-plugin
+Licensed plugin: glassfish-plugin
+Licensed plugin: jbossdm-plugin
+Support policy: 8x5
+Edition: Enterprise
+--- Signature (SHA1withDSA) ---
+302c02143587e8a404d4232bd47e69659278173621adb135021466ce5a1dfd961bfa4488f4e2f036
+ba33890e67eb
+--- End of Signature ---
