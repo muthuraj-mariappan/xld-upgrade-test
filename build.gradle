@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 buildscript {
     repositories {
         mavenLocal()
@@ -33,7 +35,7 @@ repositories {
 
 apply plugin: "integration.server"
 
-integrationServer {
+deployIntegrationServer {
     servers {
         upgradeSource {
             previousInstallation = true
@@ -41,17 +43,34 @@ integrationServer {
             httpPort = 4519
             overlays = [
                     conf: [
-                            files("src/test/resources/deployit-license.lic")
+                            files("src/test/resources/deployit-license.lic"),
+                            files("src/test/resources/xl-deploy.conf")
                     ]
             ]
         }
         controlPlane {
-            version = "10.3.0-917.113"
-            httpPort = 4519
+            version = "10.4.0-1018.113"
+        }
+    }
+}
+
+task testClientSettings {
+    doLast {
+        def p = ['curl', '-H', "Accept: application/json", "\"http://localhost:4519/deployit/internal/configuration/properties\""].execute()
+        def json = new JsonSlurper().parseText(p.text)
+        System.out.println("configuration properties -- " + json)
+
+        if (json['gui.toastr.info.timeout-ms'] != '3000') {
+            throw new Exception("gui.toastr.info.timeout-ms not matched")
+        } else if (json['gui.toastr.error.timeout-ms'] != '4000') {
+            throw new Exception("gui.toastr.error.timeout-ms not matched")
+        } else if (json['gui.toastr.success.timeout-ms'] != '500') {
+            throw new Exception("gui.toastr.success.timeout-ms not matched")
         }
     }
 }
 
 rootProject.afterEvaluate {
     startIntegrationServer.dependsOn(build)
+    testClientSettings.dependsOn(startIntegrationServer)
 }
