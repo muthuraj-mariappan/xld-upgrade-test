@@ -20,7 +20,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-SNAPSHOT")
+        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-1025.1003")
     }
 }
 
@@ -54,9 +54,33 @@ deployIntegrationServer {
     }
 }
 
+task refresh {
+    doLast {
+        def url = "http://localhost:4519/actuator/refresh"
+        def p = [
+                    'curl',
+                    '-d',
+                    '{}',
+                    '-H',
+                    "Content-Type: application/json",
+                    '-H',
+                    "Accept: application/json",
+                    url
+        ].execute()
+        def json = new JsonSlurper().parseText(p.text)
+        System.out.println("refresh output -- " + json)
+    }
+}
+
 task testClientSettings {
     doLast {
-        def p = ['curl', '-H', "Accept: application/json", "\"http://localhost:4519/deployit/internal/configuration/properties\""].execute()
+        def url = "http://localhost:4519/deployit/internal/configuration/properties"
+        def p = [
+                    'curl',
+                    '-H',
+                    "Accept: application/json",
+                    url
+        ].execute()
         def json = new JsonSlurper().parseText(p.text)
         System.out.println("configuration properties -- " + json)
 
@@ -72,5 +96,6 @@ task testClientSettings {
 
 rootProject.afterEvaluate {
     startIntegrationServer.dependsOn(build)
-    testClientSettings.dependsOn(startIntegrationServer)
+    refresh.mustRunAfter(startIntegrationServer)
+    testClientSettings.dependsOn(startIntegrationServer, refresh)
 }
