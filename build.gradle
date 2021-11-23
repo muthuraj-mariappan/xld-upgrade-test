@@ -21,12 +21,14 @@ buildscript {
     }
     dependencies {
         classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-1025.1003")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
 plugins {
     id 'scala'
     id 'idea'
+    id 'org.springframework.boot' version "${springBootVersion}"
 }
 
 repositories {
@@ -34,6 +36,16 @@ repositories {
 }
 
 apply plugin: "integration.server"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'scala'
+
+dependencies {
+    implementation platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-config'
+    implementation 'org.scala-lang:scala-library:2.13.6'
+}
 
 deployIntegrationServer {
     servers {
