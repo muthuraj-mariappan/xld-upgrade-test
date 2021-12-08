@@ -1,0 +1,11 @@
+deploy.client:
+  gui:
+    toastr:
+      error:
+        timeout-ms: 4000
+      info:
+        timeout-ms: 3000
+      success:
+        timeout-ms: 500
+      warning:
+        timeout-ms: 10000
