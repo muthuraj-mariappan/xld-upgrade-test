@@ -3,8 +3,10 @@ import groovy.json.JsonSlurper
 buildscript {
     repositories {
         mavenLocal()
-        mavenCentral()
-        ["public", "releases"].each { r ->
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        ["releases", "public"].each { r ->
             maven {
                 url "${nexusBaseUrl}/repositories/${r}"
                 credentials {
@@ -13,12 +15,10 @@ buildscript {
                 }
             }
         }
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-SNAPSHOT")
+        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-1227.911")
     }
 }
 plugins {
@@ -35,7 +35,7 @@ deployIntegrationServer {
     servers {
         server01 {
             dockerImage = "xebialabs/xl-deploy"
-            version = "10.2.2"
+            version = "10.3.3"
             httpPort = 4516
             previousInstallation = "true"
             yamlPatches = [
