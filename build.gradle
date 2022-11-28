@@ -18,7 +18,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:10.4.0-1227.911")
+        classpath("com.xebialabs.gradle.plugins:integration-server-gradle-plugin:22.2.0-SNAPSHOT")
     }
 }
 plugins {
@@ -33,29 +33,49 @@ deployIntegrationServer {
         version = "10.4.0-1201.113"
     }
     servers {
-        server01 {
-            dockerImage = "xebialabs/xl-deploy"
-            version = "10.3.3"
-            httpPort = 4516
-            previousInstallation = "true"
-            yamlPatches = [
-                    'centralConfiguration/deploy-server.yaml': [
-                            'deploy.server.label': 'Deploy Hello World'
-                    ]
-            ]
+        controlPlane1 {
+            debugPort = 4005
+            httpPort = 4517
+            jvmArgs = ["-Xmx1024m", "-Duser.timezone=UTC"]
             overlays = [
-                    conf: [
-                            files("src/test/resources/deployit-license.lic")
+                    conf                  : [
+                            files("src/test/resources/deployit-license.lic"),
+                            files("src/test/resources/infinispan-hotrod.properties")
                     ],
                     centralConfiguration: [
                             files("src/test/resources/deploy-client.yaml"),
-                            files("src/test/resources/deploy-repository.yaml")
+                            files("src/test/resources/deploy-caches.yaml")
                     ]
             ]
+            pingRetrySleepTime = 5
+            pingTotalTries = 25
+            version = "23.1.0-beta.5"
         }
-        server02 {
-            dockerImage = "xebialabsunsupported/xl-deploy"
-            version = "10.4.0-1201.113"
+        controlPlane2 {
+            debugPort = 4006
+            httpPort = 4518
+            debugSuspend = false
+            jvmArgs = ["-Xmx1024m", "-Duser.timezone=UTC"]
+            overlays = [
+                    conf                  : [
+                            files("src/test/resources/deployit-license.lic"),
+                            files("src/test/resources/infinispan-hotrod.properties")
+                    ],
+                    centralConfiguration: [
+                            files("src/test/resources/deploy-client.yaml"),
+                            files("src/test/resources/deploy-caches.yaml")
+                    ]
+            ]
+            pingRetrySleepTime = 5
+            pingTotalTries = 25
+            version = "23.1.0-beta.5"
+        }
+    }
+    workers {
+        worker01 {
+            version = "23.1.0-beta.5"
+            debugPort = 4007
+            stdoutFileName = "output-worker01.log"
         }
     }
 }

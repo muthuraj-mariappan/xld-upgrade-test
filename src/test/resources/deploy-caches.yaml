@@ -1,0 +1,12 @@
+deploy.caches:
+  enabled: true
+  provider-configuration:
+    embedded: false
+    provider:
+    provider-configuration-file: "infinispan-hotrod.properties"
+  license-cache-configuration:
+    enabled: true
+    management-enabled: true
+    statistics-enabled: true
+    ttl-minutes: 1440
+
